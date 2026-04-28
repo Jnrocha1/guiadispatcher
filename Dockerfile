@@ -5,4 +5,4 @@ RUN npm ci
 COPY . .
 RUN npx tsc
 EXPOSE 3000
-CMD ["npx", "prisma", "generate", "&&", "node", "dist/server.js"]
+CMD ["node", "dist/server.js"]
