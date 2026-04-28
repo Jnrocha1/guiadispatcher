@@ -17,12 +17,10 @@ model Tenant {
   trialEndsAt DateTime?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-
   clients     Client[]
   folders     Folder[]
   sendLogs    SendLog[]
   whatsappConnections WhatsappConnection[]
-
   @@map("tenants")
 }
 
@@ -31,43 +29,37 @@ model Client {
   tenantId  String
   name      String
   phone     String
-  document  String?  // CPF ou CNPJ
+  document  String?
   active    Boolean @default(true)
   createdAt DateTime @default(now())
-
   tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   sendLogs  SendLog[]
-
   @@unique([tenantId, phone])
   @@map("clients")
 }
 
 model Folder {
-  id           String     @id @default(cuid())
-  tenantId     String
-  name         String
-  type         FolderType @default(LOCAL)
-  path         String     // caminho local ou ID do Google Drive
-  clientId     String?    // pasta vinculada a 1 cliente específico (opcional)
-  active       Boolean    @default(true)
-  createdAt    DateTime   @default(now())
-
-  tenant       Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
+  id        String     @id @default(cuid())
+  tenantId  String
+  name      String
+  type      FolderType @default(LOCAL)
+  path      String
+  clientId  String?
+  active    Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  tenant    Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   @@map("folders")
 }
 
 model WhatsappConnection {
   id        String   @id @default(cuid())
   tenantId  String   @unique
-  instance  String   // nome da instância na Evolution API
+  instance  String
   status    WaStatus @default(DISCONNECTED)
   phone     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
   tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
   @@map("whatsapp_connections")
 }
 
@@ -78,7 +70,7 @@ model SendLog {
   clientPhone String
   fileName    String
   fileUrl     String?
-  docType     String?    // DAS, DARF, Boleto, etc
+  docType     String?
   docValue    String?
   docDueDate  String?
   message     String
@@ -88,34 +80,12 @@ model SendLog {
   errorMsg    String?
   retries     Int        @default(0)
   createdAt   DateTime   @default(now())
-
   tenant      Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   client      Client?    @relation(fields: [clientId], references: [id])
-
   @@map("send_logs")
 }
 
-enum Plan {
-  STARTER
-  PRO
-  ENTERPRISE
-}
-
-enum FolderType {
-  LOCAL
-  GOOGLE_DRIVE
-}
-
-enum WaStatus {
-  DISCONNECTED
-  CONNECTING
-  CONNECTED
-}
-
-enum SendStatus {
-  PENDING
-  SENT
-  DELIVERED
-  READ
-  FAILED
-}
+enum Plan { STARTER PRO ENTERPRISE }
+enum FolderType { LOCAL GOOGLE_DRIVE }
+enum WaStatus { DISCONNECTED CONNECTING CONNECTED }
+enum SendStatus { PENDING SENT DELIVERED READ FAILED }
