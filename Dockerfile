@@ -3,6 +3,6 @@ WORKDIR /app
 COPY package*.json ./ 
 RUN npm ci 
 COPY . . 
-RUN npx prisma generate --no-engine 
+RUN DATABASE_URL="postgresql://dummy:dummy@localhost/dummy" npx prisma generate 
 EXPOSE 3000 
 CMD ["npx", "tsx", "src/server.ts"]
