@@ -85,7 +85,27 @@ model SendLog {
   @@map("send_logs")
 }
 
-enum Plan { STARTER PRO ENTERPRISE }
-enum FolderType { LOCAL GOOGLE_DRIVE }
-enum WaStatus { DISCONNECTED CONNECTING CONNECTED }
-enum SendStatus { PENDING SENT DELIVERED READ FAILED }
+enum Plan {
+  STARTER
+  PRO
+  ENTERPRISE
+}
+
+enum FolderType {
+  LOCAL
+  GOOGLE_DRIVE
+}
+
+enum WaStatus {
+  DISCONNECTED
+  CONNECTING
+  CONNECTED
+}
+
+enum SendStatus {
+  PENDING
+  SENT
+  DELIVERED
+  READ
+  FAILED
+}
